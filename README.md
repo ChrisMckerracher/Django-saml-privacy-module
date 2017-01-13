@@ -2,8 +2,10 @@
 Django SAML2 Login Required
 =====================================
 
-:Author: Fang Li, Christopher Mckerracher
-:Version: 0.1
+| Authors        |
+|-------------|
+|Fang Li        |
+|Christopher Mckerracher|
 
 This project aims to provide functionality similar to Django's login_required decorator, with
 the added bonus of integrating with saml2. Users will be redirected to their SAML2 Identity 
@@ -15,7 +17,7 @@ pages, etc with only selected, approved individuals over the internet.
 This project is currently using a stripped down version of Fang Li's django_saml2_auth 
 library, as this project should only be used on applications still in 'dev mode'.
 
-See the original project [here](https://github.com/fangli/django-saml2-auth>)
+See the original project [here](https://github.com/fangli/django-saml2-auth)
 
 A demo of a web page using the project's decorator can be viewed [here](https://okta-login-required.herokuapp.com/decorator/with/)
 Compared to the same web page without the project's decorator [here](https://okta-login-required.herokuapp.com/decorator/without)
@@ -34,15 +36,11 @@ Install
 
 You can install this plugin via:
 
-.. code-block:: bash
-
     # git clone https://github.com/ChrisMckerracher/saml2_login_required
     # cd django-saml2-auth
     # python setup.py install
 
 xmlsec is also required by pysaml2:
-
-.. code-block:: bash
 
     # yum install xmlsec1
     // or
@@ -52,9 +50,7 @@ xmlsec is also required by pysaml2:
 How to use?
 ===========
 
-#. In your root project's urls.py, add this line to your urlpatterns:
-
-    .. code-block:: python
+# In your root project's urls.py, add this line to your urlpatterns:
 
         from saml2_login_required.django_saml2_auth_lite import acs
 
@@ -62,22 +58,18 @@ How to use?
         #should match this 
         url(r'^sso/acs/$', acs),
 
-#. Add 'saml2_login_required' to INSTALLED_APPS
-
-    .. code-block:: python
+# Add 'saml2_login_required' to INSTALLED_APPS
 
         INSTALLED_APPS = [
             '...',
             'saml2_login_required',
         ]
 
-#. In settings.py, add the SAML2 related configuration.
+# In settings.py, add the SAML2 related configuration.
 
     Please note, the only required setting is **METADATA_AUTO_CONF_URL**.
     The following block shows all required and optional configuration settings
     and their default values.
-
-    .. code-block:: python
 
         SAML2_AUTH = {
             # Required setting
@@ -98,19 +90,15 @@ How to use?
             },
         }
 
-#. In your SAML2 SSO identity provider, set the Single-sign-on URL and Audience
+# In your SAML2 SSO identity provider, set the Single-sign-on URL and Audience
    URI(SP Entity ID) to http://your-domain/sso/acs/
 
-#. To make a view required sign on, with SSO identity provider redirection, add
+# To make a view required sign on, with SSO identity provider redirection, add
    this line to your views.py:
-
-   .. code-block:: python
         
         from saml2_login_required.decorators import saml2_login_required
 
-#. From here, just add the decorator to your view.
-
-   .. code-block:: python
+# From here, just add the decorator to your view.
         
         @saml2_login_required
         def view_example(r):
