@@ -15,10 +15,10 @@ pages, etc with only selected, approved individuals over the internet.
 This project is currently using a stripped down version of Fang Li's django_saml2_auth 
 library, as this project should only be used on applications still in 'dev mode'.
 
-See the original project 'here: <https://github.com/fangli/django-saml2-auth>'_
+See the original project [here](https://github.com/fangli/django-saml2-auth>)
 
-A demo of a web page using the project's decorator can be viewed 'here : <https://okta-login-required.herokuapp.com/decorator/with/>'_
-Compared to the same web page without the project's decorator 'here : <https://okta-login-required.herokuapp.com/decorator/without/'_
+A demo of a web page using the project's decorator can be viewed [here](https://okta-login-required.herokuapp.com/decorator/with/)
+Compared to the same web page without the project's decorator [here](https://okta-login-required.herokuapp.com/decorator/without)
 
 
 Dependencies
@@ -55,6 +55,7 @@ How to use?
 #. In your root project's urls.py, add this line to your urlpatterns:
 
     .. code-block:: python
+
         from saml2_login_required.django_saml2_auth_lite import acs
 
         # This is your SP's destination endpoint. Your SAML configuration
