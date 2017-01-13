@@ -50,7 +50,7 @@ xmlsec is also required by pysaml2:
 How to use?
 ===========
 
-# In your root project's urls.py, add this line to your urlpatterns:
+## In your root project's urls.py, add this line to your urlpatterns:
 
         from saml2_login_required.django_saml2_auth_lite import acs
 
@@ -58,14 +58,14 @@ How to use?
         #should match this 
         url(r'^sso/acs/$', acs),
 
-# Add 'saml2_login_required' to INSTALLED_APPS
+## Add 'saml2_login_required' to INSTALLED_APPS
 
         INSTALLED_APPS = [
             '...',
             'saml2_login_required',
         ]
 
-# In settings.py, add the SAML2 related configuration.
+## In settings.py, add the SAML2 related configuration.
 
     Please note, the only required setting is **METADATA_AUTO_CONF_URL**.
     The following block shows all required and optional configuration settings
@@ -90,15 +90,15 @@ How to use?
             },
         }
 
-# In your SAML2 SSO identity provider, set the Single-sign-on URL and Audience
+## In your SAML2 SSO identity provider, set the Single-sign-on URL and Audience
    URI(SP Entity ID) to http://your-domain/sso/acs/
 
-# To make a view required sign on, with SSO identity provider redirection, add
+## To make a view required sign on, with SSO identity provider redirection, add
    this line to your views.py:
         
         from saml2_login_required.decorators import saml2_login_required
 
-# From here, just add the decorator to your view.
+## From here, just add the decorator to your view.
         
         @saml2_login_required
         def view_example(r):
@@ -129,10 +129,10 @@ The `Identity Provider metadata` link is the METADATA_AUTO_CONF_URL.
 How to Contribute
 =================
 
-#. Check for open issues or open a fresh issue to start a discussion around a feature idea or a bug.
-#. Fork `the repository`_ on GitHub to start making your changes to the **master** branch (or branch off of it).
-#. Write a test which shows that the bug was fixed or that the feature works as expected.
-#. Send a pull request and bug the maintainer until it gets merged and published. :) Make sure to add yourself to AUTHORS_.
+1. Check for open issues or open a fresh issue to start a discussion around a feature idea or a bug.
+2. Fork `the repository`_ on GitHub to start making your changes to the **master** branch (or branch off of it).
+3. Write a test which shows that the bug was fixed or that the feature works as expected.
+4. Send a pull request and bug the maintainer until it gets merged and published. :) Make sure to add yourself to AUTHORS_.
 
-.. _`the repository`: http://github.com/fangli/django-saml2-auth
-.. _AUTHORS: https://github.com/fangli/django-saml2-auth/blob/master/AUTHORS.rst
+[the repository](http://github.com/fangli/django-saml2-auth)
+[AUTHORS](https://github.com/fangli/django-saml2-auth/blob/master/AUTHORS.rst)
