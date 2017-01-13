@@ -1,5 +1,11 @@
-This project is written and maintained by Fang Li and
+This project is written and maintained by Fang Li, Christopher Mckerracher and
 various contributors:
+
+Saml2 Login Required
+--------------------
+
+-Christopher Mckerracher
+
 
 
 Django Saml2 Auth

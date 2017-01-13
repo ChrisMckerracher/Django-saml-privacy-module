@@ -1,41 +1,30 @@
 =====================================
-Django SAML2 Authentication Made Easy
+Django SAML2 Login Required
 =====================================
 
-:Author: Fang Li
-:Version: 1.1.4
+:Author: Fang Li, Christopher Mckerracher
+:Version: 0.1
 
-.. image:: https://img.shields.io/pypi/pyversions/django-saml2-auth.svg
-    :target: https://pypi.python.org/pypi/django-saml2-auth
+This project aims to provide functionality similar to Django's login_required decorator, with
+the added bonus of integrating with saml2. Users will be redirected to their SAML2 Identity 
+Provider's login page provided that they are not logged in.
 
-.. image:: https://img.shields.io/pypi/v/django-saml2-auth.svg
-    :target: https://pypi.python.org/pypi/django-saml2-auth
+A major benefit of this project is that it allows developers to share web applications/web
+pages, etc with only selected, approved individuals over the internet.
 
-.. image:: https://img.shields.io/pypi/dm/django-saml2-auth.svg
-        :target: https://pypi.python.org/pypi/django-saml2-auth
+This project is currently using a stripped down version of Fang Li's django_saml2_auth 
+library, as this project should only be used on applications still in 'dev mode'.
 
-This project aims to provide a dead simple way to integrate SAML2
-Authentication into your Django powered app. Try it now, and get rid of the
-complicated configuration of SAML.
+See the original project 'here: <https://github.com/fangli/django-saml2-auth>'_
 
-Any SAML2 based SSO(Single-Sign-On) identity provider with dynamic metadata
-configuration is supported by this Django plugin, for example Okta.
-
-
-
-Donate
-======
-
-We accept your donations by clicking the awesome |star| instead of any physical transfer.
-
-.. |star| image:: https://img.shields.io/github/stars/fangli/django-saml2-auth.svg?style=social&label=Star&maxAge=86400
-
+A demo of a web page using the project's decorator can be viewed 'here : <https://okta-login-required.herokuapp.com/decorator/with/>'_
+Compared to the same web page without the project's decorator 'here : <https://okta-login-required.herokuapp.com/decorator/without/'_
 
 
 Dependencies
 ============
 
-This plugin is compatible with Django 1.6/1.7/1.8/1.9. The `pysaml2` Python
+This plugin is compatible with Django 1.10 The `pysaml2` Python
 module is required.
 
 
@@ -43,17 +32,11 @@ module is required.
 Install
 =======
 
-You can install this plugin via `pip`:
+You can install this plugin via:
 
 .. code-block:: bash
 
-    # pip install django_saml2_auth
-
-or from source:
-
-.. code-block:: bash
-
-    # git clone https://github.com/fangli/django-saml2-auth
+    # git clone https://github.com/ChrisMckerracher/saml2_login_required
     # cd django-saml2-auth
     # python setup.py install
 
@@ -66,42 +49,25 @@ xmlsec is also required by pysaml2:
     # apt-get install xmlsec1
 
 
-What does this plugin do?
-=========================
-
-This plugin takes over Django's login page and redirect the user to a SAML2
-SSO authentication service. Once the user is logged in and redirected back,
-the plugin will check if the user is already in the system. If not, the user
-will be created using Django's default UserModel, otherwise the user will be
-redirected to their last visited page.
-
-
-
 How to use?
 ===========
 
-#. Override the default login page in the root urls.py file, by adding these
-   lines **BEFORE** any `urlpatterns`:
+#. In your root project's urls.py, add this line to your urlpatterns:
 
     .. code-block:: python
+        from saml2_login_required.django_saml2_auth_lite import acs
 
-        # These are the SAML2 related URLs. You can change "^saml2_auth/" regex to
-        # any path you want, like "^sso_auth/", "^sso_login/", etc. (required)
-        url(r'^saml2_auth/', include('django_saml2_auth.urls')),
+        # This is your SP's destination endpoint. Your SAML configuration
+        #should match this 
+        url(r'^sso/acs/$', acs),
 
-        # The following line will replace the default user login with SAML2 (optional)
-        url(r'^accounts/login/$', 'django_saml2_auth.views.signin'),
-
-        # The following line will replace the admin login with SAML2 (optional)
-        url(r'^admin/login/$', 'django_saml2_auth.views.signin'),
-
-#. Add 'django_saml2_auth' to INSTALLED_APPS
+#. Add 'saml2_login_required' to INSTALLED_APPS
 
     .. code-block:: python
 
         INSTALLED_APPS = [
             '...',
-            'django_saml2_auth',
+            'saml2_login_required',
         ]
 
 #. In settings.py, add the SAML2 related configuration.
@@ -120,7 +86,7 @@ How to use?
             'NEW_USER_PROFILE': {
                 'USER_GROUPS': [],  # The default group name when a new user logs in
                 'ACTIVE_STATUS': True,  # The default active status for new users
-                'STAFF_STATUS': True,  # The staff status for new users
+                'STAFF_STATUS': False,  # The staff status for new users
                 'SUPERUSER_STATUS': False,  # The superuser status for new users
             },
             'ATTRIBUTES_MAP': {  # Change Email/UserName/FirstName/LastName to corresponding SAML2 userprofile attributes.
@@ -129,15 +95,24 @@ How to use?
                 'first_name': 'FirstName',
                 'last_name': 'LastName',
             },
-            'TRIGGER': {
-                'CREATE_USER': 'path.to.your.new.user.hook.method',
-                'BEFORE_LOGIN': 'path.to.your.login.hook.method',
-            },
         }
 
 #. In your SAML2 SSO identity provider, set the Single-sign-on URL and Audience
-   URI(SP Entity ID) to http://your-domain/saml2_auth/acs/
+   URI(SP Entity ID) to http://your-domain/sso/acs/
 
+#. To make a view required sign on, with SSO identity provider redirection, add
+   this line to your views.py:
+
+   .. code-block:: python
+        
+        from saml2_login_required.decorators import saml2_login_required
+
+#. From here, just add the decorator to your view.
+
+   .. code-block:: python
+        
+        @saml2_login_required
+        def view_example(r):
 
 Explanation
 -----------
@@ -147,55 +122,6 @@ Explanation
 **NEW_USER_PROFILE** Default settings for newly created users
 
 **ATTRIBUTES_MAP** Mapping of Django user attributes to SAML2 user attributes
-
-**TRIGGER** Hooks to trigger additional actions during user login and creation
-flows. These TRIGGER hooks are strings containing a `dotted module name <https://docs.python.org/3/tutorial/modules.html#packages>`_
-which point to a method to be called. The referenced method should accept a
-single argument which is a dictionary of attributes and values sent by the
-identity provider, representing the user's identity.
-
-**TRIGGER.CREATE_USER** A method to be called upon new user creation. This
-method will be called before the new user is logged in and after the user's
-record is created. This method should accept ONE parameter of user dict.
-
-**TRIGGER.BEFORE_LOGIN** A method to be called when an existing user logs in.
-This method will be called before the user is logged in and after user
-attributes are returned by the SAML2 identity provider. This method should accept ONE parameter of user dict.
-
-
-Customize
-=========
-
-The default permission `denied` page and user `welcome` page can be
-overridden.
-
-To override these pages put a template named 'django_saml2_auth/welcome.html'
-or 'django_saml2_auth/denied.html' in your project's template folder.
-
-If a 'django_saml2_auth/welcome.html' template exists, that page will be shown
-to the user upon login instead of the user being redirected to the previous
-visited page. This welcome page can contain some first-visit notes and welcome
-words. The `Django user object <https://docs.djangoproject.com/en/1.9/ref/contrib/auth/#django.contrib.auth.models.User>`_
-is available within the template as the `user` template variable.
-
-To enable a logout page, add the following lines to urls.py, before any
-`urlpatterns`:
-
-.. code-block:: python
-
-    # The following line will replace the default user logout with the signout page (optional)
-    url(r'^accounts/logout/$', 'django_saml2_auth.views.signout'),
-
-    # The following line will replace the default admin user logout with the signout page (optional)
-    url(r'^admin/logout/$', 'django_saml2_auth.views.signout'),
-
-To override the built in signout page put a template named
-'django_saml2_auth/signout.html' in your project's template folder.
-
-If your SAML2 identity provider uses user attribute names other than the
-defaults listed in the `settings.py` `ATTRIBUTES_MAP`, update them in
-`settings.py`.
-
 
 For Okta Users
 ==============
@@ -221,15 +147,3 @@ How to Contribute
 
 .. _`the repository`: http://github.com/fangli/django-saml2-auth
 .. _AUTHORS: https://github.com/fangli/django-saml2-auth/blob/master/AUTHORS.rst
-
-
-Release Log
-===========
-
-1.1.4: Fixed urllib bug
-
-1.1.2: Added support for Python 2.7/3.x
-
-1.1.0: Added support for Django 1.6/1.7/1.8/1.9
-
-1.0.4: Fixed English grammar mistakes
