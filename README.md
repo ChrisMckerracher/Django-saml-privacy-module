@@ -4,15 +4,15 @@ Django SAML2 Login Required
 
 | Authors        |
 |-------------|
-|Fang Li        |
 |Christopher Mckerracher|
+|Fang Li        |
 
 This project aims to provide functionality similar to Django's login_required decorator, with
 the added bonus of integrating with saml2. Users will be redirected to their SAML2 Identity 
 Provider's login page provided that they are not logged in.
 
 A major benefit of this project is that it allows developers to share web applications/web
-pages, etc with only selected, approved individuals over the internet.
+pages, etc. with only selected, approved individuals over the internet.
 
 This project is currently using a stripped down version of Fang Li's django_saml2_auth 
 library, as this project should only be used on applications still in 'dev mode'.
