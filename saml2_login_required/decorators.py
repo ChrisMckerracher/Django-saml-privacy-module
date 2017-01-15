@@ -1,4 +1,6 @@
-
+"""
+Developed by Christopher Mckerracher
+"""
 
 def saml2_login_required(cls):
     """
