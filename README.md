@@ -1,5 +1,5 @@
 =====================================
-Django SAML2 Login Required
+Django SAML2 Privacy Module
 =====================================
 
 | Authors        |
