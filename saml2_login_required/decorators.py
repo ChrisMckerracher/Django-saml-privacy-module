@@ -26,6 +26,6 @@ def saml2_login_required(cls):
             actual_attribute = super().__getattribute__(attribute, **kwargs)
             
             if isinstance(actual_attribute, types.FunctionType) or isinstance(actual_attribute, types.MethodType):
-                return okta_login_required(actual_attribute)
+                return saml2_login_required(actual_attribute)
             return actual_attribute
     return Wrapped
